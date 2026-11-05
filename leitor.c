@@ -1,24 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define MAX 256
+
+typedef struct {
+    char nome[MAX];
+    char codigo[MAX];
+} Municipio;
 
 int main(int argc, char *argv[]) {
     char *arquivo = argv[1];
-    
+
     FILE *fp = fopen(arquivo, "r");
-    char *linha = NULL;
-    size_t tam = 0;
-    ssize_t leitura;
 
     if(fp == NULL) {
         printf("erro na abertura de arquivo!!");
         return 1;
     }
 
-    while(leitura = getline(&linha, &tam, fp) != -1) {
-        printf("%s", linha);
+    char registro[256];
+    Municipio municipio[62];
+    memset(municipio, 0, sizeof(municipio));
+
+    for (int i = 0; i < 62; i++) {
+        fgets(registro, sizeof(registro), fp);
+        sscanf(registro, "%[^,],%s", municipio[i].nome, municipio[i].codigo);
+        printf("%s | %s\n", municipio[i].nome, municipio[i].codigo);
     }
 
-    free(linha);
     fclose(fp);
-
 }
